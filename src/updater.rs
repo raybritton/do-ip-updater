@@ -13,17 +13,19 @@ pub struct Updater {
     firewall_endpoint: String,
     token: String,
     freq: Duration,
-    port: usize
+    port: usize,
+    once: bool
 }
 
 impl Updater {
-    pub fn new(id: String, token: String, freq: Duration, port: usize) -> Updater {
+    pub fn new(id: String, token: String, freq: Duration, port: usize, once: bool) -> Updater {
         return Updater {
             get_ip: String::from(GET_IP_ENDPOINT),
             firewall_endpoint: format!("https://api.digitalocean.com/v2/firewalls/{}", id),
             token,
             freq,
-            port
+            port,
+            once
         };
     }
 }
@@ -73,7 +75,7 @@ impl Updater {
 
                 match self.post_rules(&client, ip) {
                     Ok(text) => {
-                        info!("{}", text);
+                        trace!("{}", text);
                     }
                     Err(err) => {
                         error!("{}", err.description());
@@ -83,6 +85,9 @@ impl Updater {
                 trace!("IP hasn't changed");
             }
 
+            if self.once {
+                return Ok(());
+            }
             trace!("Checking in {} minutes", self.freq.as_secs() / 60);
             std::thread::sleep(self.freq)
         }
@@ -112,7 +117,7 @@ impl Updater {
     }
 
     fn delete_rules(&self, client: &Client, addresses: Vec<String>) -> Result<(), Error> {
-        info!("Removing {}", addresses.join(", "));
+        trace!("Removing {}", addresses.join(", "));
         let rules = FirewallRules::from_addresses(addresses, self.port);
         let resp = client.delete(&format!("{}/rules", &self.firewall_endpoint))
             .json(&rules)

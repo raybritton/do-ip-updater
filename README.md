@@ -23,6 +23,7 @@ OPTIONS:
     -t, --token <TOKEN>          DigitalOcean Bearer Token
     -i, --id <ID>                DigitalOcean Firewall ID
     -f, --frequency <MINUTES>    How often (in minutes) to check the IP address is set [default: 30]
+    -o, --once                   Run once then exit
     -p, --port <PORT>            Port in the firewall to be updated [default: 22]
 ```
 
