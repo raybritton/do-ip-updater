@@ -43,6 +43,17 @@ fn main() -> Result<(), Error> {
             .value_name("MINUTES")
             .default_value("30")
             .validator(|value| value.parse::<u64>().map(|_| ()).map_err(|_| String::from("Must be positive whole number"))))
+        .arg(Arg::with_name("port")
+            .long("port")
+            .short("p")
+            .help("Port in the firewall to be updated")
+            .required(false)
+            .multiple(false)
+            .takes_value(true)
+            .number_of_values(1)
+            .value_name("PORT")
+            .default_value("22")
+            .validator(|value| value.parse::<u64>().map(|_| ()).map_err(|_| String::from("Must be positive whole number"))))
         .arg(Arg::with_name("verbose")
             .takes_value(false)
             .short("v")
@@ -55,6 +66,7 @@ fn main() -> Result<(), Error> {
     let token = matches.value_of("do_token").expect("[CLAP ERROR] No DigitalOcean token").to_string();
     let id = matches.value_of("firewall_id").expect("[CLAP ERROR] No DigitalOcean id").to_string();
     let freq: u64 = matches.value_of("freq").expect("[CLAP ERROR] No frequency").parse().unwrap();
+    let port = matches.value_of("port").expect("[CLAP ERROR] No port").parse().unwrap();
     let verbosity = matches.occurrences_of("verbose");
 
     let log_level = int_to_log_level(verbosity);
@@ -75,6 +87,7 @@ fn main() -> Result<(), Error> {
         id,
         token,
         Duration::from_secs(freq * 60),
+        port
     );
 
     updater.run()?;

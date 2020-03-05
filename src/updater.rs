@@ -13,15 +13,17 @@ pub struct Updater {
     firewall_endpoint: String,
     token: String,
     freq: Duration,
+    port: usize
 }
 
 impl Updater {
-    pub fn new(id: String, token: String, freq: Duration) -> Updater {
+    pub fn new(id: String, token: String, freq: Duration, port: usize) -> Updater {
         return Updater {
             get_ip: String::from(GET_IP_ENDPOINT),
             firewall_endpoint: format!("https://api.digitalocean.com/v2/firewalls/{}", id),
             token,
             freq,
+            port
         };
     }
 }
@@ -103,7 +105,7 @@ impl Updater {
             Err(Error::from(format!("Error getting rules: {}", resp.unwrap_err())))
         } else {
             match resp.unwrap().json::<Firewall>() {
-                Ok(rules) => Ok(rules.firewall.list_of_ssh_addresses()),
+                Ok(rules) => Ok(rules.firewall.list_of_addresses(self.port)),
                 Err(err) => Err(Error::from(format!("Error parsing rules: {}", err)))
             }
         };
@@ -111,7 +113,7 @@ impl Updater {
 
     fn delete_rules(&self, client: &Client, addresses: Vec<String>) -> Result<(), Error> {
         info!("Removing {}", addresses.join(", "));
-        let rules = FirewallRules::from_addresses(addresses);
+        let rules = FirewallRules::from_addresses(addresses, self.port);
         let resp = client.delete(&format!("{}/rules", &self.firewall_endpoint))
             .json(&rules)
             .send();
@@ -124,7 +126,7 @@ impl Updater {
     }
 
     fn post_rules(&self, client: &Client, ip: String) -> Result<String, Error> {
-        let rules = FirewallRules::new(ip);
+        let rules = FirewallRules::new(ip, self.port);
 
         let resp = client.post(&format!("{}/rules", &self.firewall_endpoint))
             .json(&rules)

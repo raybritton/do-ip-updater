@@ -23,12 +23,12 @@ pub struct Sources {
 }
 
 impl FirewallRules {
-    pub fn new(address: String) -> FirewallRules {
+    pub fn new(address: String, port: usize) -> FirewallRules {
         return FirewallRules {
             inbound_rules: vec![
                 Rule {
                     protocol: String::from("tcp"),
-                    ports: String::from("22"),
+                    ports: format!("{}", port),
                     sources: Sources {
                         addresses: vec![address]
                     },
@@ -37,12 +37,12 @@ impl FirewallRules {
         };
     }
 
-    pub fn from_addresses(addresses: Vec<String>) -> FirewallRules {
+    pub fn from_addresses(addresses: Vec<String>, port: usize) -> FirewallRules {
         return FirewallRules {
             inbound_rules: vec![
                 Rule {
                     protocol: String::from("tcp"),
-                    ports: String::from("22"),
+                    ports: format!("{}", port),
                     sources: Sources {
                         addresses
                     },
@@ -53,10 +53,10 @@ impl FirewallRules {
 }
 
 impl FirewallRules {
-    pub fn list_of_ssh_addresses(&self) -> Vec<String> {
+    pub fn list_of_addresses(&self, port: usize) -> Vec<String> {
         return self.inbound_rules
             .iter()
-            .filter(|rule| rule.ports == "22")
+            .filter(|rule| rule.ports == format!("{}", port))
             .map(|rule| rule.sources.addresses.clone())
             .collect::<Vec<Vec<String>>>()
             .iter()
