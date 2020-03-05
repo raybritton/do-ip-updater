@@ -1,0 +1,19 @@
+[package]
+name = "do_ip_updater"
+version = "0.1.0"
+authors = ["Ray Britton <ray.britton@mubaloo.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+
+[dependencies]
+reqwest = { version = "0.10.4", features = ["blocking", "json", "gzip"] }
+clap = "2.33.0"
+serde = { version = "1.0.104", features = ["derive"] }
+serde_json = "1.0.48"
+log = "0.4.8"
+simplelog = "0.7.4"
