@@ -1,7 +1,7 @@
 mod models;
 mod updater;
 
-use clap::{App, Arg};
+use clap::{App, Arg, crate_version};
 use simplelog::{ConfigBuilder, SimpleLogger};
 use log::LevelFilter;
 use crate::updater::Updater;
@@ -11,7 +11,7 @@ pub type Error = Box<dyn std::error::Error>;
 
 fn main() -> Result<(), Error> {
     let matches = App::new("DigitalOcean IP Updater")
-        .version("1.0")
+        .version(crate_version!())
         .author("Ray Britton <raybritton@gmail.com>")
         .about("Regularly checks that the internet IP address of this program is on a DigitalOcean firewall for the SSH port, and sets it if not")
         .arg(Arg::with_name("firewall_id")

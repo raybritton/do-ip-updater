@@ -1,7 +1,7 @@
 [package]
 name = "do_ip_updater"
-version = "0.2.2"
-authors = ["Ray Britton <ray.britton@mubaloo.com>"]
+version = "0.2.3"
+authors = ["Ray Britton <raybritton@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
