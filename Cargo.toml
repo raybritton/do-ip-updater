@@ -1,6 +1,6 @@
 [package]
 name = "do_ip_updater"
-version = "0.2.3"
+version = "0.3.0"
 authors = ["Ray Britton <raybritton@gmail.com>"]
 edition = "2018"
 publish = false
