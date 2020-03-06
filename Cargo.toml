@@ -3,6 +3,9 @@ name = "do_ip_updater"
 version = "0.2.3"
 authors = ["Ray Britton <raybritton@gmail.com>"]
 edition = "2018"
+publish = false
+repository = "https://github.com/raybritton/do-ip-updater"
+description = "Regularly checks that the internet IP address of this program is on a DigitalOcean firewall for the SSH port, and sets it if not"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
