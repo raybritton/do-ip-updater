@@ -89,7 +89,9 @@ fn main() -> Result<(), Error> {
         .add_filter_ignore_str("reqwest")
         .build();
 
-    SimpleLogger::init(log_level, config)?;
+    if let Err(err) = SimpleLogger::init(log_level, config) {
+        eprintln!("Logger failed to initialise\nNo other errors will be printed\n{}", err);
+    }
 
     let updater = Updater::new(
         id,
